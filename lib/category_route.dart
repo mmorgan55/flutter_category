@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
-// TODO: Check if we need to import anything
 import 'package:flutter_category/category.dart';
-// TODO: Define any constants
+import 'unit.dart';
 
-final _backGroundColor = Colors.blue[100];
+final _backgroundColor = Colors.blue[100];
 
 /// Category Route (screen).
 ///
@@ -38,19 +36,29 @@ class CategoryRoute extends StatelessWidget {
     Colors.red,
   ];
 
-  Widget _buildCategories(List<Widget> categories) {
+  /// Makes the correct number of rows for the list view.
+  ///
+  /// For portrait, we use a [ListView].
+  Widget _buildCategoryWidgets(List<Widget> categories) {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) => categories[index],
       itemCount: categories.length,
     );
   }
 
+  /// Returns a list of mock [Unit]s.
+  List<Unit> _retrieveUnitList(String categoryName) {
+    return List.generate(10, (int i) {
+      i += 1;
+      return Unit(
+        name: '$categoryName Unit $i',
+        conversion: i.toDouble(),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: Create a list of the eight Categories, using the names and colors
-    // from above. Use a placeholder icon, such as `Icons.cake` for each
-    // Category. We'll add custom icons later.
-
     final categories = <Category>[];
 
     for (var i = 0; i < _categoryNames.length; i++) {
@@ -58,24 +66,27 @@ class CategoryRoute extends StatelessWidget {
         name: _categoryNames[i],
         color: _baseColors[i],
         iconLocation: Icons.cake,
+        units: _retrieveUnitList(_categoryNames[i]),
       ));
     }
 
-    // TODO: Create a list view of the Categories
     final listView = Container(
+      color: _backgroundColor,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: _buildCategories(categories),
+      child: _buildCategoryWidgets(categories),
     );
 
-    // TODO: Create an App Bar
     final appBar = AppBar(
+      elevation: 0.0,
       title: Text(
         'Unit Converter',
-        style: TextStyle(fontSize: 30.0),
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 30.0,
+        ),
       ),
-      elevation: 0.0,
       centerTitle: true,
-      backgroundColor: _backGroundColor,
+      backgroundColor: _backgroundColor,
     );
 
     return Scaffold(

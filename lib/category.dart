@@ -5,12 +5,10 @@
 // To keep your imports tidy, follow the ordering guidelines at
 // https://www.dartlang.org/guides/language/effective-dart/style#ordering
 import 'package:flutter/material.dart';
+import 'unit.dart';
+import 'converter_route.dart';
 
-/// A custom [Category] widget.
-///
-/// The widget is composed on an [Icon] and [Text]. Tapping on the widget shows
-/// a colored [InkWell] animation.
-///
+
 final _rowHeight = 100.0;
 final _borderRadius = BorderRadius.circular(50.0);
 
@@ -18,31 +16,45 @@ class Category extends StatelessWidget {
   final String name;
   final ColorSwatch color;
   final IconData iconLocation;
+  final List<Unit> units;
 
-  /// Creates a [Category].
-  ///
-  /// A [Category] saves the name of the Category (e.g. 'Length'), its color for
-  /// the UI, and the icon that represents it (e.g. a ruler).
   const Category({
     Key key,
-    this.name,
-    this.color,
-    this.iconLocation,
+    @required this.name,
+    @required this.color,
+    @required this.iconLocation,
+    @required this.units,
   })  : assert(name != null),
         assert(color != null),
         assert(iconLocation != null),
+        assert(units != null),
         super(key: key);
 
-  /// Builds a custom widget that shows [Category] information.
-  ///
-  /// This information includes the icon, name, and color for the [Category].
+  void _navigateToConverter(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute<Null>(
+      builder: (BuildContext context) {
+        return Scaffold(
+          appBar: AppBar(
+            elevation: 1.0,
+            title: Text(
+              name,
+              style: Theme.of(context).textTheme.display1,
+            ),
+            backgroundColor: color,
+          ),
+          body: ConverterRoute(
+            color: color,
+            name: name,
+            units: units,
+          ),
+        );
+      },
+    ));
+  }
+
+
   @override
-  // This `context` parameter describes the location of this widget in the
-  // widget tree. It can be used for obtaining Theme data from the nearest
-  // Theme ancestor in the tree. Below, we obtain the display1 text theme.
-  // See https://docs.flutter.io/flutter/material/Theme-class.html
   Widget build(BuildContext context) {
-    // TODO: Build the custom widget here, referring to the Specs.
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -51,7 +63,7 @@ class Category extends StatelessWidget {
           borderRadius: _borderRadius,
           highlightColor: color,
           splashColor: color,
-          onTap: () => print('Tapped!'),
+          onTap: () => _navigateToConverter(context),
           child: Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(
@@ -70,7 +82,7 @@ class Category extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.headline,
                   ),
-                )
+                ),
               ],
             ),
           ),
